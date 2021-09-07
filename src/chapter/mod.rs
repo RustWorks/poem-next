@@ -5,7 +5,9 @@ use crate::{NextMiddleware, NextMiddlewareGroup};
 mod path;
 
 use path::Path;
-use poem::{http::Method, Endpoint, EndpointExt, IntoEndpoint, Response, RouteMethod};
+use poem::{
+    http::Method, route::Route, Endpoint, EndpointExt, IntoEndpoint, Response, RouteMethod,
+};
 
 ///poem中路由树，类似于组
 pub struct Chapter {
@@ -98,18 +100,18 @@ impl Chapter {
             method_endpoint,
         } = self;
 
-        let method_route = method_endpoint.into_iter().fold(
-            RouteMethod::new(),
-            |method_route, (method, ep)| {
-                let method_route = method_route.method(
-                    method,
-                    ep.with(NextMiddlewareGroup {
-                        next_middleware: middleware.clone(),
-                    }),
-                );
-                method_route
-            },
-        );
+        let method_route =
+            method_endpoint
+                .into_iter()
+                .fold(RouteMethod::new(), |method_route, (method, ep)| {
+                    let method_route = method_route.method(
+                        method,
+                        ep.with(NextMiddlewareGroup {
+                            next_middleware: middleware.clone(),
+                        }),
+                    );
+                    method_route
+                });
         let local_endpoints = vec![RouteDescriptor {
             path: path,
             route_method: method_route,
@@ -124,4 +126,18 @@ impl Chapter {
 pub struct RouteDescriptor {
     path: Path,
     route_method: RouteMethod,
+}
+
+pub trait RouterBuilder {
+    fn add(self, chapter: Chapter) -> Self;
+}
+
+impl RouterBuilder for Route {
+    fn add(mut self, chapter: Chapter) -> Self {
+        for RouteDescriptor { path, route_method } in chapter.build() {
+            self = self.at(&path.to_string(), route_method)
+        }
+
+        self
+    }
 }

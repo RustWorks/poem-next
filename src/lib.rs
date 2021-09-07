@@ -1,11 +1,9 @@
-
-
-pub mod middleware;
-pub mod error;
-pub mod endpoint;
 pub mod chapter;
+pub mod endpoint;
+pub mod error;
+pub mod middleware;
 
-pub use middleware::{NextMiddleware, Next};
-pub use error::Result;
+pub use chapter::{Chapter, RouterBuilder};
 pub use endpoint::{NextEndpoint, NextMiddlewareGroup};
-
+pub use error::Result;
+pub use middleware::{Next, NextMiddleware};
