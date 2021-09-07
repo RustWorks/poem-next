@@ -1,5 +1,5 @@
-use poem::{handler, route, route::get, web::Path, Server};
-use poem_next::{NextExt, NextMiddlewareGroup, middleware::SetHeader};
+use poem::{handler, route, route::get, web::Path, Server, EndpointExt};
+use poem_next::{NextMiddlewareGroup, middleware::SetHeader};
 
 
 #[handler]
@@ -14,7 +14,7 @@ async fn main() {
     let mut middleware_group = NextMiddlewareGroup::default();
     middleware_group.push(set_header);
 
-    let app = route().at("/hello/:name", get(hello.wrap(&middleware_group)));
+    let app = route().at("/hello/:name", get(hello.with(middleware_group)));
     let server = Server::bind("127.0.0.1:3000").await.unwrap();
     server.run(app).await.unwrap();
 }
