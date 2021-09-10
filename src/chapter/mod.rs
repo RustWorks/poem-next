@@ -18,6 +18,17 @@ pub struct Chapter {
 }
 
 impl Chapter {
+    pub fn new(prefix: &str) -> Chapter {
+        Chapter {
+            path: Path::prefix(prefix),
+            middleware: vec![],
+            method_endpoint: HashMap::new(),
+            chapters: vec![],
+        }
+    }
+}
+
+impl Chapter {
     ///创建子路由
     pub fn at<F>(mut self, path: &str, create_chapter: F) -> Self
     where
@@ -88,6 +99,20 @@ impl Chapter {
     pub fn method(mut self, method: Method, ep: impl IntoEndpoint) -> Self {
         self.method_endpoint
             .insert(method, Box::new(ep.into_endpoint().map_to_response()));
+        self
+    }
+
+    //添加一个服务
+    pub fn post(mut self, ep: impl IntoEndpoint) -> Self {
+        self.method_endpoint
+            .insert(Method::POST, Box::new(ep.into_endpoint().map_to_response()));
+        self
+    }
+
+    //添加一个服务
+    pub fn get(mut self, ep: impl IntoEndpoint) -> Self {
+        self.method_endpoint
+            .insert(Method::GET, Box::new(ep.into_endpoint().map_to_response()));
         self
     }
 

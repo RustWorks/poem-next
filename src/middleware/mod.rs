@@ -4,6 +4,7 @@ use poem::{endpoint::BoxEndpoint, Request, Response};
 
 use crate::Result;
 
+pub mod auth;
 mod set_header;
 
 pub use set_header::SetHeader;
