@@ -1,12 +1,12 @@
 [package]
 name = "poem-next"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-poem = "0.4"
+poem = "0.6.0"
 
 # 错误处理
 anyhow = "1"
