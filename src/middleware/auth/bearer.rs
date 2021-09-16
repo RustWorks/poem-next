@@ -4,7 +4,7 @@ use crate::middleware::auth::Error;
 
 use super::Scheme;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct Bearer;
 
 pub struct Token(String);

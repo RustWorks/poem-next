@@ -8,6 +8,7 @@ use crate::{NextMiddleware, Result};
 mod bearer;
 mod error;
 
+pub use bearer::Bearer;
 pub use error::Error;
 
 #[async_trait::async_trait]
@@ -24,6 +25,15 @@ pub trait Scheme: Send + Sync + 'static {
 }
 
 pub struct Auth<S>(S);
+
+impl<S> Auth<S> {
+    pub fn new(scheme: S) -> Self
+    where
+        S: Scheme,
+    {
+        Auth(scheme)
+    }
+}
 
 #[async_trait::async_trait]
 impl<S> Scheme for Auth<S>
