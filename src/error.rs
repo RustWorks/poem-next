@@ -1,5 +1,5 @@
 use anyhow::Error;
-use poem::IntoResponse;
+use poem::{http::StatusCode, IntoResponse};
 
 pub struct NextError(pub Error);
 
@@ -16,6 +16,6 @@ where
 
 impl IntoResponse for NextError {
     fn into_response(self) -> poem::Response {
-        todo!()
+        (StatusCode::INTERNAL_SERVER_ERROR, self.0.to_string()).into()
     }
 }

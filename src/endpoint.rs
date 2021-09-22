@@ -1,20 +1,16 @@
 use std::{marker::PhantomData, sync::Arc};
 
+use crate::{Next, NextMiddleware, Result};
 use poem::{endpoint::BoxEndpoint, Endpoint, Middleware, Request, Response};
-use crate::{NextMiddleware, Result, Next};
 
-
-
-#[derive(Default)]
+#[derive(Default, Clone)]
 pub struct NextMiddlewareGroup {
     pub(crate) next_middleware: Vec<Arc<dyn NextMiddleware>>,
 }
 
 impl From<Vec<Arc<dyn NextMiddleware>>> for NextMiddlewareGroup {
     fn from(next_middleware: Vec<Arc<dyn NextMiddleware>>) -> Self {
-        NextMiddlewareGroup {
-            next_middleware
-        }
+        NextMiddlewareGroup { next_middleware }
     }
 }
 

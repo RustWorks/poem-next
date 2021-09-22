@@ -44,6 +44,61 @@ impl Chapter {
         self
     }
 
+    ///为已经创建的子路由添加中间件
+    pub fn wrap_middleware(self, next_middleware: Arc<dyn NextMiddleware>) -> Self {
+        let Chapter {
+            mut chapters,
+            middleware,
+            path,
+            method_endpoint,
+        } = self;
+
+        chapters = chapters
+            .into_iter()
+            .map(|mut chapter| {
+                chapter.middleware.push(next_middleware.clone());
+                chapter = chapter.wrap_middleware(next_middleware.clone());
+                chapter
+            })
+            .collect();
+
+        Chapter {
+            chapters,
+            middleware,
+            path,
+            method_endpoint,
+        }
+    }
+
+    ///为已经创建的子路由添加中间件组
+    pub fn wrap_middleware_group(self, next_middleware_group: NextMiddlewareGroup) -> Self {
+        let Chapter {
+            mut chapters,
+            middleware,
+            path,
+            method_endpoint,
+        } = self;
+
+        chapters = chapters
+            .into_iter()
+            .map(|mut chapter| {
+                chapter
+                    .middleware
+                    .append(&mut next_middleware_group.clone().next_middleware);
+
+                chapter = chapter.wrap_middleware_group(next_middleware_group.clone());
+                chapter
+            })
+            .collect();
+
+        Chapter {
+            chapters,
+            middleware,
+            path,
+            method_endpoint,
+        }
+    }
+
     //添加一个子路由
     pub fn add(mut self, chapter: Chapter) -> Self {
         let Chapter {

@@ -9,6 +9,8 @@ pub mod auth;
 mod before;
 mod set_header;
 
+pub use after::After;
+pub use before::Before;
 pub use set_header::SetHeader;
 
 #[async_trait::async_trait]

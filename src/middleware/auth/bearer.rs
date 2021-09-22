@@ -7,7 +7,7 @@ use super::Scheme;
 #[derive(Debug, Clone, Default)]
 pub struct Bearer;
 
-pub struct Token(String);
+pub struct Token(pub String);
 
 #[async_trait::async_trait]
 impl Scheme for Bearer {

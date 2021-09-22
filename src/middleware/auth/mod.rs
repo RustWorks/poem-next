@@ -8,7 +8,7 @@ use crate::{NextMiddleware, Result};
 mod bearer;
 mod error;
 
-pub use bearer::Bearer;
+pub use bearer::{Bearer, Token};
 pub use error::Error;
 
 #[async_trait::async_trait]
